@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import { Button, Form } from 'semantic-ui-react'
+import axios from 'axios'
+import './App.css'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [userId, setUserId] = useState('')
+	const [date, setDate] = useState('')
+	const [isLoading, setIsLoading] = useState(false)
+
+	const onSubmit = async event => {
+		event.preventDefault()
+		setIsLoading(true)
+		try {
+			await axios.post('http://localhost:8080/external/vaccinated', {
+				id: userId,
+				dateTime: date,
+			})
+		} catch (error) {
+			console.log(error.data)
+		}
+		setIsLoading(false)
+	}
+
+	return (
+		<div className="App">
+			<h1>MeVaccine Mock Vaccination System</h1>
+			<Form onSubmit={onSubmit}>
+				<Form.Field>
+					<label>National ID</label>
+					<input type="text" value={userId} onChange={e => setUserId(e.target.value)} />
+				</Form.Field>
+				<Form.Field>
+					<label>Date</label>
+					<input type="date" value={date} onChange={e => setDate(e.target.value)} />
+				</Form.Field>
+				<Button loading={isLoading} type="submit">
+					Submit
+				</Button>
+			</Form>
+		</div>
+	)
 }
 
-export default App;
+export default App
