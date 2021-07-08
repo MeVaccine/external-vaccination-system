@@ -12,7 +12,7 @@ function App() {
 		event.preventDefault()
 		setIsLoading(true)
 		try {
-			await axios.post('http://localhost:8080/external/vaccinated', {
+			await axios.post('https://mevaccine.cscms.me/external/vaccinated', {
 				id: userId,
 				dateTime: date,
 			})
