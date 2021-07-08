@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 import { Button, Form, Message } from 'semantic-ui-react'
 import axios from 'axios'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import LocalizedFormat from 'dayjs/plugin/localizedFormat'
 import './App.css'
+
+dayjs.extend(utc)
+dayjs.extend(LocalizedFormat)
 
 function App() {
 	const [userId, setUserId] = useState('')
@@ -21,7 +27,11 @@ function App() {
 				id: userId,
 				dateTime: date,
 			})
-			setMessage(res.data.dateTime ? `Next appointment is on ${res.data.dateTime}` : `Success on second dose`)
+			setMessage(
+				res.data.dateTime
+					? `Next appointment is on ${dayjs.utc(res.data.dateTime).local().format('lll')}`
+					: `Success on second dose`
+			)
 			setIsSuccess(true)
 		} catch (error) {
 			console.log(error.response.data)
